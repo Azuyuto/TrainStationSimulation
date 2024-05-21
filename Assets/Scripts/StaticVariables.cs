@@ -5,6 +5,6 @@ using UnityEngine;
 public class StaticVariables : MonoBehaviour
 {
     public static string ciapagi;
-    public static string dworce;
+    public static string perony;
     public static string wagony;
 }
