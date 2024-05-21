@@ -54,6 +54,7 @@ public class ServerInit : MonoBehaviour
 		routingManager.AddRoute(new Route(Route.Type.POST, "/color/{objname}", "MaterialInvoke.SetColor"));
 		routingManager.AddRoute(new Route(Route.Type.DELETE, "/color/{objname}", "MaterialInvoke.DeleteColor"));
 
+
 		// Starts the Simple REST Server
 		// With or without basic authorisation flag
 		if (!username.Equals("") && !password.Equals("")) 
