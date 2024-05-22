@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System;
 
 public class InputFieldManager : MonoBehaviour
 {
@@ -15,7 +16,7 @@ public class InputFieldManager : MonoBehaviour
     {
         // Get the text value from the input field
         StaticVariables.ciapagi = inputCiapagi.text;
-        StaticVariables.perony = inputPerony.text;
+        StaticVariables.MAX_NO_PLATFORMS = Int32.Parse(inputPerony.text);
         StaticVariables.wagony = inputWagony.text;
     }
 }

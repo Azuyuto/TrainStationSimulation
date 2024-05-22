@@ -16,11 +16,14 @@ public class Platform : MonoBehaviour
     private float z;
     private float rotateY;
     private Track[] tracks;
-    private int maxTrucksNumber;
+    private Track[] tracks2;
+    private int maxTrucksNumber=StaticVariables.MAX_NO_PLATFORMS*2;
     private Color color;
     private float length;
+    private int noPlatforms = 0;
 
-    GameObject platformObject;
+    private GameObject[] platforms;
+    GameObject platform1Object;
     /// <summary>
     /// Use this for initialization
     /// </summary>
@@ -33,17 +36,21 @@ public class Platform : MonoBehaviour
         this.y = y;
         this.z = z;
         this.rotateY = rotateY;
-        this.tracks = new Track[2];
+        this.tracks = new Track[maxTrucksNumber];
+        this.platforms = new GameObject[StaticVariables.MAX_NO_PLATFORMS];
         this.length = length;
 
-        this.platformObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        this.platformObject.transform.position = new Vector3(x, y, z);
-        this.platformObject.GetComponent<MeshRenderer>().material.color = this.color;
-        this.platformObject.GetComponent<MeshRenderer>().name = "Platform " + platformId;
-        this.platformObject.transform.localScale = new Vector3(60, 3f, 10);
+        for (int i = 0; i < StaticVariables.MAX_NO_PLATFORMS; i++)
+        {
+            platforms[i] = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            platforms[i].transform.position = new Vector3(x, y, z + 30 * noPlatforms);
+            platforms[i].GetComponent<MeshRenderer>().material.color = this.color;
+            platforms[i].GetComponent<MeshRenderer>().name = "Platform " + noPlatforms;
+            platforms[i].transform.localScale = new Vector3(60, 3f, 10);
+            noPlatforms++;
+        }
 
         CreateTrack();
-        // CreateTrack();
     }
 
     void CreateTrack()
@@ -51,18 +58,11 @@ public class Platform : MonoBehaviour
         //if(tracks.Length)
         //if (tracks[0].Equals(null))
         //{
-        tracks[0] = new Track(this.platformId, 0, this.x, this.y, this.z + 1, 0, this.length, 1);
-        // return;
-        //}
-        //if (tracks[1].Equals(null))
-        //{
-        tracks[1] = new Track(this.platformId, 1, this.x, this.y, this.z - 1, 0, this.length, -1);
-        //  return;
-        // }
-        // else
-        //{
-        //no more tracks
-        // }
+        for(int i = 0;i< noPlatforms; i++)
+        {
+            tracks[i] = new Track(this.platformId, 0, this.x, this.y, this.z + 1+i*30, 0, this.length, 1);
+            tracks[i+1] = new Track(this.platformId, 1, this.x, this.y, this.z - 1 + i * 30, 0, this.length, -1);
+        }
 
     }
 

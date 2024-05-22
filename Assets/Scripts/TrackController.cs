@@ -24,7 +24,7 @@ public class TrackController : MonoBehaviour
 
     void Start()
     {
-        Test();
+            Test();
     }
 
     /// <summary>
