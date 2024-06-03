@@ -16,11 +16,16 @@ public class Platform : MonoBehaviour
     private float z;
     private float rotateY;
     private Track[] tracks;
-    private int maxTrucksNumber;
+    private Track[] tracks2;
+    private Bench[] benches;
+    private int maxTrucksNumber=StaticVariables.MAX_NO_PLATFORMS*2;
     private Color color;
     private float length;
+    private int noPlatforms = 0;
+    private int noBenchesOnPlatform = 0;
 
-    GameObject platformObject;
+    private GameObject[] platforms;
+    GameObject platform1Object;
     /// <summary>
     /// Use this for initialization
     /// </summary>
@@ -33,36 +38,49 @@ public class Platform : MonoBehaviour
         this.y = y;
         this.z = z;
         this.rotateY = rotateY;
-        this.tracks = new Track[2];
+        this.tracks = new Track[maxTrucksNumber];
+        this.benches = new Bench[maxTrucksNumber];
+        this.platforms = new GameObject[StaticVariables.MAX_NO_PLATFORMS];
         this.length = length;
 
-        this.platformObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        this.platformObject.transform.position = new Vector3(x, y, z);
-        this.platformObject.GetComponent<MeshRenderer>().material.color = this.color;
-        this.platformObject.GetComponent<MeshRenderer>().name = "Platform " + platformId;
-        this.platformObject.transform.localScale = new Vector3(60, 3f, 10);
+        for (int i = 0; i < StaticVariables.MAX_NO_PLATFORMS; i++)
+        {
+            platforms[i] = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            platforms[i].transform.position = new Vector3(x, y, z + 30 * noPlatforms);
+            platforms[i].GetComponent<MeshRenderer>().material.color = this.color;
+            platforms[i].GetComponent<MeshRenderer>().name = "Platform " + noPlatforms;
+            platforms[i].transform.localScale = new Vector3(60, 3f, 10);
+            noPlatforms++;
+            CreateBenches(x, y, z + 30 * noPlatforms, 2);
+        }
 
-        CreateTrack();
-        // CreateTrack();
+        CreateTrack(true);//tracks with tables
     }
 
-    void CreateTrack()
+    void CreateTrack(bool tables)
     {
         //if(tracks.Length)
         //if (tracks[0].Equals(null))
         //{
-        tracks[0] = new Track(this.platformId, 0, this.x, this.y, this.z + 1, 0, this.length, 1);
-        // return;
-        //}
-        //if (tracks[1].Equals(null))
+        for(int i = 0;i< noPlatforms; i++)
+        {
+            tracks[i] = new Track(this.platformId, 0, this.x, this.y, this.z + 1+i*30, 0, this.length, 1, tables);
+            tracks[i+1] = new Track(this.platformId, 1, this.x, this.y, this.z - 1 + i * 30, 0, this.length, -1, tables);
+        }
+
+    }
+
+    void CreateBenches(float x, float y, float z, int noBenches)
+    {
+        int distrance = 15;
+        //if(tracks.Length)
+        //if (tracks[0].Equals(null))
         //{
-        tracks[1] = new Track(this.platformId, 1, this.x, this.y, this.z - 1, 0, this.length, -1);
-        //  return;
-        // }
-        // else
-        //{
-        //no more tracks
-        // }
+        for (int i = 0; i < noBenches; i++)
+        {
+            benches[i] = new Bench(this.platformId, ++noBenchesOnPlatform, x+(i* distrance + 1), y, z - 1 - 30, 0, this.length/ noBenches, 1);
+            benches[i+1] = new Bench(this.platformId, ++noBenchesOnPlatform, x - (i * distrance + 1), y, z - 1 - 30, 0, this.length / noBenches, 1);
+        }
 
     }
 

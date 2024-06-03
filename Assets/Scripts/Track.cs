@@ -15,12 +15,13 @@ public class Track : MonoBehaviour
 
     GameObject rail1;
     GameObject rail2;
+    GameObject table;
     /// <summary>
     /// Use this for initialization
     /// </summary>
     /// 
 
-    public Track(int platformId, int truckId, float x, float y, float z, float rotateY, float length, int side)
+    public Track(int platformId, int truckId, float x, float y, float z, float rotateY, float length, int side, bool tables)
     {
         id = Convert.ToInt16(Convert.ToString(platformId) + Convert.ToString(truckId));
         attachedPlatformId = platformId;
@@ -36,6 +37,21 @@ public class Track : MonoBehaviour
         this.rail2.GetComponent<MeshRenderer>().material.color = Color.gray;
         this.rail2.GetComponent<MeshRenderer>().name = "Track " + truckId + " rail 2";
         this.rail2.transform.localScale = new Vector3(120, 1f, 0.5f);
+
+        string tabletext = "Track " + truckId + "platform " + platformId;
+        this.table = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        this.table.transform.position = new Vector3(x, y + 10, z - 8f * side);
+        this.table.GetComponent<MeshRenderer>().material.color = Color.blue;
+        this.table.GetComponent<MeshRenderer>().name = "Table: "+tabletext;
+        this.table.transform.localScale = new Vector3(1f, 2f, 4f);
+
+        GameObject textObject = new GameObject(tabletext);
+        textObject.transform.parent = this.table.transform; 
+        textObject.transform.localPosition = new Vector3(0, 1, 0);
+        TextMesh textMesh = textObject.AddComponent<TextMesh>();
+        textMesh.text = tabletext; // Set the text
+        textMesh.fontSize = 12; // Set the font size
+        textMesh.alignment = TextAlignment.Center; // Set the alignment
     }
 
     void Start()
