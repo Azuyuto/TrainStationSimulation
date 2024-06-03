@@ -12,27 +12,6 @@ namespace Assets.Scripts
 {
     public class TrainController : MonoBehaviour
     {
-        public List<Train> trains = new List<Train>() { 
-            new Train() { 
-                Id = "Ciapąg 1",
-                Color = "blue",
-                X = 0,
-                Y = 5,
-                Z = 10,
-                RotateY = 0,
-                Speed = 1
-            },
-            new Train() {
-                Id = "Ciapąg 2",
-                Color = "green",
-                X = 0,
-                Y = 5,
-                Z = -10,
-                RotateY = 0,
-                Speed = 2
-            } 
-        };
-
         public GameObject trainPrefab;
 
         void Start()
@@ -40,7 +19,7 @@ namespace Assets.Scripts
             if (trainPrefab != null)
             {
                 var rotation = new Quaternion(-1f, 0f, 0f, 1f);
-                foreach (var item in trains)
+                foreach (var item in DataHelper.trains)
                 {
                     item.Instance = Instantiate(trainPrefab, new Vector3(0, 0, 0), rotation);
                 }
@@ -54,7 +33,7 @@ namespace Assets.Scripts
         void Update()
         {
             var rotation = new Quaternion(-1f, 0f, 0f, 1f);
-            foreach (var item in trains)
+            foreach (var item in DataHelper.trains)
             {
                 item.X -= item.Speed / 100;
                 if(item.X < -20)
