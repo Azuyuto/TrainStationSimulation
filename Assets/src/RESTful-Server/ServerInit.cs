@@ -3,6 +3,7 @@ using System.Collections;
 using RESTfulHTTPServer;
 using RESTfulHTTPServer.src.controller;
 using RESTfulHTTPServer.src.models;
+using Assets.Scripts.Utils;
 
 public class ServerInit : MonoBehaviour
 {
@@ -12,34 +13,30 @@ public class ServerInit : MonoBehaviour
     public string username = "";
     public string password = "";
 
-    /// <summary>
-    /// Use this for initialization
-    /// </summary>
-    void Start()
-    {
+	/// <summary>
+	/// Use this for initialization
+	/// </summary>
+	void Awake () {
 
-        // Make sure the applications continues to run in the background
-        Application.runInBackground = true;
+		// Make sure the applications continues to run in the background
+		Application.runInBackground = true;
+        DataHelper.InitializeData();
+		// ------------------------------
+		// Creating a Simple REST server
+		// ------------------------------
 
-        // ------------------------------
-        // Creating a Simple REST server
-        // ------------------------------
-
-        // 1. Create the routing table
-        // HTTP Type 	 - URL routing path with variables 	- Class and method to be called
-        // HTTP Type     - /foo/bar/{variable}   			- DelegetorClass.MethodToBeCalled
-        RoutingManager routingManager = new RoutingManager();
-        routingManager.AddRoute(new Route(Route.Type.GET, "/color/{objname}", "MaterialInvoke.GetColor"));
-        routingManager.AddRoute(new Route(Route.Type.POST, "/color/{objname}", "MaterialInvoke.SetColor"));
-        routingManager.AddRoute(new Route(Route.Type.DELETE, "/color/{objname}", "MaterialInvoke.DeleteColor"));
+		// 1. Create the routing table
+		// HTTP Type 	 - URL routing path with variables 	- Class and method to be called
+		// HTTP Type     - /foo/bar/{variable}   			- DelegetorClass.MethodToBeCalled
+		RoutingManager routingManager = new RoutingManager();
+		routingManager.AddRoute(new Route(Route.Type.GET, "/color/{objname}", "MaterialInvoke.GetColor"));
+		routingManager.AddRoute(new Route(Route.Type.POST, "/color/{objname}", "MaterialInvoke.SetColor"));
+		routingManager.AddRoute(new Route(Route.Type.DELETE, "/color/{objname}", "MaterialInvoke.DeleteColor"));
 
         routingManager.AddRoute(new Route(Route.Type.GET, "/train/{Id}", "TrainInvoke.GetTrain"));
         routingManager.AddRoute(new Route(Route.Type.POST, "/train/{Id}", "TrainInvoke.PostTrain"));
         routingManager.AddRoute(new Route(Route.Type.DELETE, "/train/{Id}", "TrainInvoke.DeleteTrain"));
 
-        routingManager.AddRoute(new Route(Route.Type.GET, "/platform/{Id}", "PlatformInvoke.GetPlatform"));
-        routingManager.AddRoute(new Route(Route.Type.POST, "/platform/{Id}", "PlatformInvoke.PostPlatform"));
-        routingManager.AddRoute(new Route(Route.Type.DELETE, "/platform/{Id}", "PlatformInvoke.DeletePlatform"));
         // Starts the Simple REST Server
         // With or without basic authorisation flag
         if (!username.Equals("") && !password.Equals(""))

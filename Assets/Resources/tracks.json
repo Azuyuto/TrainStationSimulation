@@ -1,0 +1,24 @@
+[
+  {
+    "Id": "t0",
+    "ParentPlatform": {
+      "Id": "p0"
+    },
+    "IsLeftTrack": true,
+    "Length": 100,
+    "Train": {
+      "Id": "train0"
+    }
+  },
+  {
+    "Id": "t1",
+    "ParentPlatform": {
+      "Id": "p0"
+    },
+    "IsLeftTrack": false,
+    "Length": 100,
+    "Train": {
+      "Id": "train1"
+    }
+  }
+]

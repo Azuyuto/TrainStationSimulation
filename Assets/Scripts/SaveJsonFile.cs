@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.IO;
+using Assets.Scripts.Model;
 
 public class SaveJsonFileToDesktop : MonoBehaviour
 {
@@ -7,19 +8,11 @@ public class SaveJsonFileToDesktop : MonoBehaviour
 
     void Start()
     {
-        // Create an instance of PlayerData
-        PlayerData playerData = new PlayerData
-        {
-            name = "John Doe",
-            age = 30,
-            score = 1500
-        };
-
         // Save the data to a JSON file
-        SaveDataToJson(playerData, fileName);
+        SaveDataToJson(new Train(), fileName);
     }
 
-    void SaveDataToJson(PlayerData data, string fileName)
+    void SaveDataToJson(Train data, string fileName)
     {
         // Serialize the data to a JSON string
         string json = JsonUtility.ToJson(data, true);

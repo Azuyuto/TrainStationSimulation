@@ -1,0 +1,20 @@
+[
+  {
+    "Id": "train0",
+    "ParentTrack": {
+      "Id": "t0"
+    },
+    "Color": "green",
+    "Speed": 5,
+    "ArrivedLength":  0
+  },
+  {
+    "Id": "train1",
+    "ParentTrack": {
+      "Id": "t1"
+    },
+    "Color": "orange",
+    "Speed": 3,
+    "ArrivedLength": 0
+  }
+]

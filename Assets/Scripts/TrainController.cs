@@ -18,13 +18,9 @@ namespace Assets.Scripts
         {
             if (trainPrefab != null)
             {
-                var rotation = new Quaternion(-1f, 0f, 0f, 1f);
-                foreach (var item in DataHelper.trains)
+                foreach (var item in DataHelper.Trains)
                 {
-                    GameObject trainInstance = Instantiate(trainPrefab, new Vector3(0, 0, 0), rotation);
-                    trainInstance.name = item.Id; // Assign a unique name based on the train ID
-                    item.Instance = trainInstance; // Save the reference to the instantiated GameObject in the Train instance
-                    
+                    AddTrain(item);
                 }
             }
             else
@@ -33,20 +29,25 @@ namespace Assets.Scripts
             }
         }
 
-        void Update()
+        public void AddTrain(Train item)
         {
             var rotation = new Quaternion(-1f, 0f, 0f, 1f);
-            foreach (var item in DataHelper.trains)
+            GameObject trainInstance = Instantiate(trainPrefab, new Vector3(0, 0, 0), rotation);
+            trainInstance.name = item.Id; // Assign a unique name based on the train ID
+            item.Instance = trainInstance; // Save the reference to the instantiated GameObject in the Train instance
+        }
+
+        void Update()
+        {
+            foreach (var item in DataHelper.Trains)
             {
-                item.X -= item.Speed / 100;
-                if(item.X < -20)
+                item.ArrivedLength -= item.Speed / 100;
+                if(item.ArrivedLength < (item.ParentTrack.Length / 2) * (-1))
                 {
-                    item.X = 20;
+                    item.ArrivedLength = item.ParentTrack.Length / 2;
                 }
                 
-                item.Instance.transform.position = new Vector3(item.X, item.Y, item.Z);
-                rotation.y = item.RotateY;
-                item.Instance.transform.rotation = rotation;
+                item.Instance.transform.position = item.GetPosition();
 
                 Color trainColor;
                 if (ColorHelper.TryGetColorByName(item.Color, out trainColor))

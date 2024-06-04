@@ -25,6 +25,8 @@ using System;
 using System.Net;
 using RESTfulHTTPServer.src.models;
 using RESTfulHTTPServer.src.controller;
+using Assets.Scripts.Utils;
+using System.Linq;
 
 namespace RESTfulHTTPServer.src.invoker
 {
@@ -51,7 +53,8 @@ namespace RESTfulHTTPServer.src.invoker
                 RESTfulHTTPServer.src.controller.Logger.Log(TAG, "key: " + key + " , value: " + value);
             }
 
-            UnityInvoker.ExecuteOnMainThread.Enqueue(() => {
+            UnityInvoker.ExecuteOnMainThread.Enqueue(() =>
+            {
 
                 // Determine our object in the scene
                 GameObject gameObject = GameObject.Find(Id);
@@ -120,7 +123,8 @@ namespace RESTfulHTTPServer.src.invoker
             string responseData = "";
             string Id = request.GetParameter("Id");
 
-            UnityInvoker.ExecuteOnMainThread.Enqueue(() => {
+            UnityInvoker.ExecuteOnMainThread.Enqueue(() =>
+            {
 
                 // Determine our object in the scene
                 GameObject gameObject = GameObject.Find(Id);
@@ -185,7 +189,8 @@ namespace RESTfulHTTPServer.src.invoker
             string Id = request.GetParameter("Id");
             bool valid = true;
 
-            UnityInvoker.ExecuteOnMainThread.Enqueue(() => {
+            UnityInvoker.ExecuteOnMainThread.Enqueue(() =>
+            {
 
                 // Determine our object in the scene
                 GameObject gameObject = GameObject.Find(Id);
@@ -214,13 +219,11 @@ namespace RESTfulHTTPServer.src.invoker
                             // Set the color to the object
                             Material mat = gameObject.GetComponent<Renderer>().material;
                             mat.color = vhsMaterial.GetColor();
-
-                            // Create a returning json object for the result
-                            vhsMaterialResult.SetColor(mat.color);
-                            responseData = JsonUtility.ToJson(vhsMaterialResult);
                         }
 
+                        var gameTrain = DataHelper.Trains.Where(a => a.Id == Id).FirstOrDefault();
                     }
+
                     catch (Exception e)
                     {
                         valid = false;
