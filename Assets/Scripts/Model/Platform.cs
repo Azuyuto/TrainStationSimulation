@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,12 @@ namespace Assets.Scripts.Model
     [System.Serializable]
     public class Platform
     {
+        [JsonIgnore]
         public GameObject Instance { get; set; }
+        [JsonIgnore]
+        public GameObject InstanceText { get; set; }
+        [JsonIgnore]
+        public GameObject InstanceTextLabel { get; set; }
         public string Id { get; set; }
         public string Color { get; set; }
         public int Number { get; set; }

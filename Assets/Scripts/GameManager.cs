@@ -34,9 +34,9 @@ public class GameManager : MonoBehaviour
 
         }
         string date = DateTime.Now.Year + "-" + DateTime.Now.Month + "-" + DateTime.Now.Day;
-        Debug.Log(date);
+        //Debug.Log(date);
         string time = DateTime.Now.Hour + ":" + DateTime.Now.Minute + ":" + DateTime.Now.Second;
-        Debug.Log(time);
+        //Debug.Log(time);
         //time += Time.deltaTime;
         //timeText.text = "Time: " + Mathf.Clamp(Mathf.CeilToInt(time), 0, int.MaxValue).ToString();
         timeText.text = " Date: " + date + "                                                           Time: " + time;

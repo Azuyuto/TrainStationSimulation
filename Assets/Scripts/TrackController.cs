@@ -1,41 +1,41 @@
 using UnityEngine;
 using System.Collections;
+using Assets.Scripts.Utils;
+using Assets.Scripts.Model;
 
-public class TrackController : MonoBehaviour
+namespace Assets.Scripts
 {
-    private int platformsCounter;
-    const int MAX_NO_PLATFORMS = 5;
-    private int tracksCounter;
-
-    Platform[] platforms;
-    /// <summary>
-    /// Use this for initialization
-    /// </summary>
-    /// 
-
-    void AddPlatform(int id, float x, float y, float z, float rotateY, float length)
+    public class TrackController : MonoBehaviour
     {
-        if (platformsCounter < MAX_NO_PLATFORMS)
+        void Start()
         {
-            platforms[platformsCounter] = new Platform(id, x, y, z, rotateY, length);
-            platformsCounter++;
+            foreach (var item in DataHelper.Tracks)
+            {
+                AddTrack(item);
+            }
         }
-    }
 
-    void Start()
-    {
-            Test();
-    }
+        public void AddTrack(Model.Track item)
+        {
+            item.InstanceRailLeft = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            item.InstanceRailRight = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        }
 
-    /// <summary>
-    /// Update is called once per frame
-    /// </summary>
-    void Update()
-    {
-    }
+        void Update()
+        {
+            foreach (var item in DataHelper.Tracks)
+            {
+                item.InstanceRailLeft.transform.position = item.GetRailPosition(true);
+                item.InstanceRailLeft.GetComponent<MeshRenderer>().material.color = Color.gray;
+                item.InstanceRailLeft.GetComponent<MeshRenderer>().name = item.Id + "l";
+                item.InstanceRailLeft.transform.localScale = new Vector3(item.Length, 1f, 0.5f);
 
-    void Test()
-    {
-        AddPlatform(1, 3, 2, 3, 0, 0);
+                item.InstanceRailRight.transform.position = item.GetRailPosition(false);
+                item.InstanceRailRight.GetComponent<MeshRenderer>().material.color = Color.gray;
+                item.InstanceRailRight.GetComponent<MeshRenderer>().name = item.Id + "r";
+                item.InstanceRailRight.transform.localScale = new Vector3(item.Length, 1f, 0.5f);
+            }
+        }
+
     }
 }

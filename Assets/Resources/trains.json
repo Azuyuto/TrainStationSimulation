@@ -6,7 +6,7 @@
     },
     "Color": "green",
     "Speed": 5,
-    "ArrivedLength":  0
+    "ArrivedLength": 0
   },
   {
     "Id": "train1",
@@ -15,6 +15,15 @@
     },
     "Color": "orange",
     "Speed": 3,
+    "ArrivedLength": 0
+  },
+  {
+    "Id": "train2",
+    "ParentTrack": {
+      "Id": "t2"
+    },
+    "Color": "magenta",
+    "Speed": 7,
     "ArrivedLength": 0
   }
 ]

@@ -22,6 +22,17 @@ namespace Assets.Scripts
         public void AddPlatform(Model.Platform item)
         {
             item.Instance = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            item.InstanceText = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            item.InstanceTextLabel = new GameObject("Peron " + item.Number);
+
+            item.InstanceText.GetComponent<MeshRenderer>().material.color = Color.black;
+            item.InstanceText.GetComponent<MeshRenderer>().name = item.Id + "Text";
+            item.InstanceText.transform.localScale = new Vector3(6f, 2f, 1f);
+
+            TextMesh textMesh = item.InstanceTextLabel.AddComponent<TextMesh>();
+            textMesh.text = item.InstanceTextLabel.name;
+            textMesh.fontSize = 12;
+            textMesh.alignment = TextAlignment.Center;
         }
 
         void Update()
@@ -41,6 +52,12 @@ namespace Assets.Scripts
                         meshRenderer.material.color = platformColor;
                     }
                 }
+
+                var position = item.GetPosition();
+                position.y += 10;
+                item.InstanceText.transform.position = position;
+                item.InstanceTextLabel.transform.parent = item.InstanceText.transform;
+                item.InstanceTextLabel.transform.localPosition = new Vector3((float)-0.33, (float)0.33, 0);
             }
         }
     }

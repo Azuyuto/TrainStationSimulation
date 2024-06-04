@@ -35,12 +35,28 @@ namespace Assets.Scripts
             GameObject trainInstance = Instantiate(trainPrefab, new Vector3(0, 0, 0), rotation);
             trainInstance.name = item.Id; // Assign a unique name based on the train ID
             item.Instance = trainInstance; // Save the reference to the instantiated GameObject in the Train instance
+            item.ToAdd = false;
+        }
+
+        public void DeleteTrain(Train item)
+        {
+            Destroy(item.Instance);
+            DataHelper.Trains.Remove(item);
         }
 
         void Update()
         {
             foreach (var item in DataHelper.Trains)
             {
+                if(item.ToDelete)
+                {
+                    DeleteTrain(item);
+                }
+                if(item.ToAdd)
+                {
+                    AddTrain(item);
+                }
+
                 item.ArrivedLength -= item.Speed / 100;
                 if(item.ArrivedLength < (item.ParentTrack.Length / 2) * (-1))
                 {

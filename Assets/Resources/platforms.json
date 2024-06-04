@@ -18,5 +18,25 @@
         "Id": "t1"
       }
     ]
+  },
+  {
+    "Id": "p1",
+    "Color": "magenta",
+    "Number": 2,
+    "X": 3,
+    "Y": 2,
+    "Z": 70,
+    "Length": 150,
+    "Width": 30,
+    "Height": 2,
+    "RotateY": 0,
+    "Tracks": [
+      {
+        "Id": "t2"
+      },
+      {
+        "Id": "t3"
+      }
+    ]
   }
 ]

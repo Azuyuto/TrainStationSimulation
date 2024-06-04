@@ -33,9 +33,12 @@ public class ServerInit : MonoBehaviour
 		routingManager.AddRoute(new Route(Route.Type.POST, "/color/{objname}", "MaterialInvoke.SetColor"));
 		routingManager.AddRoute(new Route(Route.Type.DELETE, "/color/{objname}", "MaterialInvoke.DeleteColor"));
 
-        routingManager.AddRoute(new Route(Route.Type.GET, "/train/{Id}", "TrainInvoke.GetTrain"));
-        routingManager.AddRoute(new Route(Route.Type.POST, "/train/{Id}", "TrainInvoke.PostTrain"));
-        routingManager.AddRoute(new Route(Route.Type.DELETE, "/train/{Id}", "TrainInvoke.DeleteTrain"));
+        // POPRAWNE API - NIE ZMIENIAĆ MI TRAIN-INVOKE
+        routingManager.AddRoute(new Route(Route.Type.GET, "/train/{id}", "TrainInvoke.Get"));
+        routingManager.AddRoute(new Route(Route.Type.PUT, "/train/{id}", "TrainInvoke.Put"));
+        routingManager.AddRoute(new Route(Route.Type.POST, "/train/{id}", "TrainInvoke.Post"));
+        routingManager.AddRoute(new Route(Route.Type.DELETE, "/train/{id}", "TrainInvoke.Delete"));
+
 
         // Starts the Simple REST Server
         // With or without basic authorisation flag

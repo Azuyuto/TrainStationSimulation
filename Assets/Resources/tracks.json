@@ -20,5 +20,24 @@
     "Train": {
       "Id": "train1"
     }
+  },
+  {
+    "Id": "t2",
+    "ParentPlatform": {
+      "Id": "p1"
+    },
+    "IsLeftTrack": false,
+    "Length": 200,
+    "Train": {
+      "Id": "train2"
+    }
+  },
+  {
+    "Id": "t3",
+    "ParentPlatform": {
+      "Id": "p1"
+    },
+    "IsLeftTrack": false,
+    "Length": 200
   }
 ]

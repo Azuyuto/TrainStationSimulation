@@ -51,11 +51,11 @@ namespace Assets.Scripts.Utils
 
         }
 
-        private static void AttachModels()
+        public static void AttachModels()
         {
             Trains.ForEach(a => a.ParentTrack = Tracks.FirstOrDefault(c => c.Id == a.ParentTrack.Id));
             Tracks.ForEach(a => a.ParentPlatform = Platforms.FirstOrDefault(c => c.Id == a.ParentPlatform.Id));
-            Tracks.ForEach(a => a.Train = Trains.FirstOrDefault(c => c.Id == a.Train.Id));
+            Tracks.ForEach(a => a.Train = a.Train != null ? Trains.FirstOrDefault(c => c.Id == a.Train.Id) : null);
             Platforms.ForEach(a => a.Tracks = Tracks.Where(c => a.Tracks.Any(d => d.Id == c.Id)).ToList());
         }
     }

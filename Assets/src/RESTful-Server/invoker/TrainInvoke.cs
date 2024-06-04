@@ -27,6 +27,10 @@ using RESTfulHTTPServer.src.models;
 using RESTfulHTTPServer.src.controller;
 using Assets.Scripts.Utils;
 using System.Linq;
+using Assets.src.RESTful_Server.models;
+using Newtonsoft.Json;
+using System.Collections.Generic;
+using Assets.Scripts.Model;
 
 namespace RESTfulHTTPServer.src.invoker
 {
@@ -34,15 +38,10 @@ namespace RESTfulHTTPServer.src.invoker
     {
         private const string TAG = "Train Invoke";
 
-        /// <summary>
-        /// Get the color of an object
-        /// </summary>
-        /// <returns>The color.</returns>
-        /// <param name="request">Request.</param>
-        public static Response GetTrain(Request request)
+        public static Response Get(Request request)
         {
             Response response = new Response();
-            string Id = request.GetParameter("Id");
+            string id = request.GetParameter("id");
             string responseData = "";
 
             // Verbose all URL variables
@@ -53,33 +52,17 @@ namespace RESTfulHTTPServer.src.invoker
                 RESTfulHTTPServer.src.controller.Logger.Log(TAG, "key: " + key + " , value: " + value);
             }
 
-            UnityInvoker.ExecuteOnMainThread.Enqueue(() =>
-            {
+            UnityInvoker.ExecuteOnMainThread.Enqueue(() => {
 
                 // Determine our object in the scene
-                GameObject gameObject = GameObject.Find(Id);
-                if (gameObject != null)
+                var gameTrain = DataHelper.Trains.Where(a => a.Id == id).FirstOrDefault();
+                if (gameTrain != null)
                 {
                     try
                     {
-                        VHSMaterial vhsMaterial = new VHSMaterial();
-
-                        // Check if it's our light source
-                        if (gameObject.GetComponent<Light>() != null)
-                        {
-                            Light light = gameObject.GetComponent<Light>();
-                            vhsMaterial = new VHSMaterial(light.color);
-
-                            // Or a mesh object
-                        }
-                        else
-                        {
-                            Material mat = gameObject.GetComponent<Renderer>().material;
-                            vhsMaterial = new VHSMaterial(mat.color);
-                        }
-                        responseData = JsonUtility.ToJson(vhsMaterial);
+                        responseData = JsonConvert.SerializeObject(gameTrain, new JsonSerializerSettings() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+                        response.SetContent(responseData);
                         response.SetHTTPStatusCode((int)HttpStatusCode.OK);
-
                     }
                     catch (Exception e)
                     {
@@ -93,11 +76,11 @@ namespace RESTfulHTTPServer.src.invoker
                 }
                 else
                 {
-                    // 404 - Not found
-                    responseData = "404";
+                    // 404 - Object not found
+                    responseData = JsonConvert.SerializeObject(new { message = "Not found train with id: " + id });
                     response.SetContent(responseData);
                     response.SetHTTPStatusCode((int)HttpStatusCode.NotFound);
-                    response.SetMimeType(Response.MIME_CONTENT_TYPE_TEXT);
+                    response.SetMimeType(Response.MIME_CONTENT_TYPE_HTML);
                 }
             });
 
@@ -112,134 +95,103 @@ namespace RESTfulHTTPServer.src.invoker
             return response;
         }
 
-        /// <summary>
-        /// Deletes the color.
-        /// </summary>
-        /// <returns>The color.</returns>
-        /// <param name="request">Request.</param>
-        public static Response DeleteTrain(Request request)
+        public static Response Put(Request request)
         {
             Response response = new Response();
+            string id = request.GetParameter("id");
             string responseData = "";
-            string Id = request.GetParameter("Id");
+            string json = request.GetPOSTData();
+            var trainRequest = JsonConvert.DeserializeObject<Train>(json);
+            var valid = true;
 
-            UnityInvoker.ExecuteOnMainThread.Enqueue(() =>
-            {
-
-                // Determine our object in the scene
-                GameObject gameObject = GameObject.Find(Id);
-                if (gameObject != null)
+            UnityInvoker.ExecuteOnMainThread.Enqueue(() => {
+                if (id != trainRequest.Id)
                 {
-                    // Check if it's our light source
-                    if (gameObject.GetComponent<Light>() != null)
-                    {
-                        // Set the color to the object
-                        Light light = gameObject.GetComponent<Light>();
-                        light.color = Color.white;
-
-                        // Create a returning json object for the result
-                        VHSMaterial vhsMaterialResult = new VHSMaterial();
-                        vhsMaterialResult.SetColor(light.color);
-                        responseData = JsonUtility.ToJson(vhsMaterialResult);
-                    }
-                    // It's our mesh object
-                    else
-                    {
-                        // Set the color to the object
-                        Material mat = gameObject.GetComponent<Renderer>().material;
-                        mat.color = Color.white;
-
-                        // Create a returning json object for the result
-                        VHSMaterial vhsMaterialResult = new VHSMaterial();
-                        vhsMaterialResult.SetColor(mat.color);
-                        responseData = JsonUtility.ToJson(vhsMaterialResult);
-                    }
-                    response.SetHTTPStatusCode((int)HttpStatusCode.OK);
-
-                }
-                else
-                {
-
-                    // 404 - Not Found
-                    responseData = "404";
+                    // 406 - Ids not compare.
+                    responseData = JsonConvert.SerializeObject(new { message = "Id from parameter " + id + " is not equal to id from request body " + trainRequest.Id + "." });
                     response.SetContent(responseData);
                     response.SetHTTPStatusCode((int)HttpStatusCode.NotFound);
                     response.SetMimeType(Response.MIME_CONTENT_TYPE_HTML);
+                    return;
                 }
+
+                var gameTrain = new Train()
+                {
+                    Id = trainRequest.Id,
+                    Color = trainRequest.Color,
+                    ToDelete = false,
+                    ArrivedLength = trainRequest.ArrivedLength,
+                    Speed = trainRequest.Speed,
+                    ParentTrack = trainRequest.ParentTrack,
+                    ToAdd = true
+                };
+                DataHelper.Trains.Add(gameTrain);
+                DataHelper.AttachModels();
+
+                responseData = JsonConvert.SerializeObject(gameTrain, new JsonSerializerSettings() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+                response.SetContent(responseData);
+                response.SetHTTPStatusCode((int)HttpStatusCode.OK);
             });
 
             // Wait for the main thread
             while (responseData.Equals("")) { }
 
-            response.SetContent(responseData);
-            response.SetMimeType(Response.MIME_CONTENT_TYPE_JSON);
+            // Filling up the response with data
+            if (valid)
+            {
+
+                // 200 - OK
+                response.SetContent(responseData);
+                response.SetHTTPStatusCode((int)HttpStatusCode.OK);
+                response.SetMimeType(Response.MIME_CONTENT_TYPE_JSON);
+            }
+            else
+            {
+
+                // 406 - Not acceptable
+                response.SetContent("Failed to deseiralised JSON");
+                response.SetHTTPStatusCode((int)HttpStatusCode.NotAcceptable);
+                response.SetMimeType(Response.MIME_CONTENT_TYPE_HTML);
+            }
+
             return response;
         }
 
-        /// <summary>
-        /// Sets the color of a game object.
-        /// </summary>
-        /// <returns>The color.</returns>
-        /// <param name="request">Request.</param>
-        public static Response SetTrain(Request request)
+        public static Response Post(Request request)
         {
             Response response = new Response();
+            string id = request.GetParameter("id");
             string responseData = "";
             string json = request.GetPOSTData();
-            string Id = request.GetParameter("Id");
-            bool valid = true;
+            var trainRequest = JsonConvert.DeserializeObject<Train>(json);
+            var valid = true;
 
-            UnityInvoker.ExecuteOnMainThread.Enqueue(() =>
-            {
-
-                // Determine our object in the scene
-                GameObject gameObject = GameObject.Find(Id);
-                if (gameObject != null)
+            UnityInvoker.ExecuteOnMainThread.Enqueue(() => {
+                if(id != trainRequest.Id)
                 {
-                    try
-                    {
-                        // Deserialise the material
-                        VHSMaterial vhsMaterial = JsonUtility.FromJson<VHSMaterial>(json);
-                        VHSMaterial vhsMaterialResult = new VHSMaterial();
+                    // 406 - Ids not compare.
+                    responseData = JsonConvert.SerializeObject(new { message = "Id from parameter " + id + " is not equal to id from request body " + trainRequest.Id + "." });
+                    response.SetContent(responseData);
+                    response.SetHTTPStatusCode((int)HttpStatusCode.NotFound);
+                    response.SetMimeType(Response.MIME_CONTENT_TYPE_HTML);
+                    return;
+                }
 
-                        // Check if it's our light source
-                        if (gameObject.GetComponent<Light>() != null)
-                        {
-                            // Set the color to the object
-                            Light light = gameObject.GetComponent<Light>();
-                            light.color = vhsMaterial.GetColor();
+                var gameTrain = DataHelper.Trains.Where(a => a.Id == trainRequest.Id).FirstOrDefault();
 
-                            // Create a returning json object for the result
-                            vhsMaterialResult.SetColor(light.color);
-                            responseData = JsonUtility.ToJson(vhsMaterialResult);
-                        }
-                        // It's our mesh object
-                        else
-                        {
-                            // Set the color to the object
-                            Material mat = gameObject.GetComponent<Renderer>().material;
-                            mat.color = vhsMaterial.GetColor();
-                        }
-
-                        var gameTrain = DataHelper.Trains.Where(a => a.Id == Id).FirstOrDefault();
-                    }
-
-                    catch (Exception e)
-                    {
-                        valid = false;
-                        string msg = "Failed to deseiralised JSON";
-                        responseData = msg;
-
-                        RESTfulHTTPServer.src.controller.Logger.Log(TAG, msg);
-                        RESTfulHTTPServer.src.controller.Logger.Log(TAG, e.ToString());
-                    }
-
+                if (gameTrain != null)
+                {
+                    gameTrain.Color = trainRequest.Color;
+                    gameTrain.Speed = trainRequest.Speed;
+                    gameTrain.ArrivedLength = trainRequest.ArrivedLength;
+                    responseData = JsonConvert.SerializeObject(gameTrain, new JsonSerializerSettings() { ReferenceLoopHandling = ReferenceLoopHandling.Ignore });
+                    response.SetContent(responseData);
+                    response.SetHTTPStatusCode((int)HttpStatusCode.OK);
                 }
                 else
                 {
-
                     // 404 - Object not found
-                    responseData = "404";
+                    responseData = JsonConvert.SerializeObject(new { message = "Not found train with id: " + trainRequest.Id });
                     response.SetContent(responseData);
                     response.SetHTTPStatusCode((int)HttpStatusCode.NotFound);
                     response.SetMimeType(Response.MIME_CONTENT_TYPE_HTML);
@@ -267,6 +219,41 @@ namespace RESTfulHTTPServer.src.invoker
                 response.SetMimeType(Response.MIME_CONTENT_TYPE_HTML);
             }
 
+            return response;
+        }
+
+        public static Response Delete(Request request)
+        {
+            Response response = new Response();
+            string responseData = "";
+            string id = request.GetParameter("id");
+
+            UnityInvoker.ExecuteOnMainThread.Enqueue(() => {
+
+                // Determine our object in the scene
+                var gameTrain = DataHelper.Trains.Where(a => a.Id == id).FirstOrDefault();
+                if (gameTrain != null)
+                {
+                    gameTrain.ToDelete = true;
+                    responseData = JsonConvert.SerializeObject(new { message = "Successfully removed: " + id });
+                    response.SetContent(responseData);
+                    response.SetHTTPStatusCode((int)HttpStatusCode.OK);
+                }
+                else
+                {
+                    // 404 - Not Found
+                    responseData = JsonConvert.SerializeObject(new { message = "Not found train with id: " + id });
+                    response.SetContent(responseData);
+                    response.SetHTTPStatusCode((int)HttpStatusCode.NotFound);
+                    response.SetMimeType(Response.MIME_CONTENT_TYPE_HTML);
+                }
+            });
+
+            // Wait for the main thread
+            while (responseData.Equals("")) { }
+
+            response.SetContent(responseData);
+            response.SetMimeType(Response.MIME_CONTENT_TYPE_JSON);
             return response;
         }
     }
