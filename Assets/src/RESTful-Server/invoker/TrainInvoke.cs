@@ -91,7 +91,7 @@ namespace RESTfulHTTPServer.src.invoker
                 else
                 {
                     // 404 - Not found
-                    responseData = "404 oi blyat";
+                    responseData = "404";
                     response.SetContent(responseData);
                     response.SetHTTPStatusCode((int)HttpStatusCode.NotFound);
                     response.SetMimeType(Response.MIME_CONTENT_TYPE_TEXT);
@@ -157,7 +157,7 @@ namespace RESTfulHTTPServer.src.invoker
                 {
 
                     // 404 - Not Found
-                    responseData = "404 cyka";
+                    responseData = "404";
                     response.SetContent(responseData);
                     response.SetHTTPStatusCode((int)HttpStatusCode.NotFound);
                     response.SetMimeType(Response.MIME_CONTENT_TYPE_HTML);
@@ -236,7 +236,7 @@ namespace RESTfulHTTPServer.src.invoker
                 {
 
                     // 404 - Object not found
-                    responseData = "404 pidar";
+                    responseData = "404";
                     response.SetContent(responseData);
                     response.SetHTTPStatusCode((int)HttpStatusCode.NotFound);
                     response.SetMimeType(Response.MIME_CONTENT_TYPE_HTML);

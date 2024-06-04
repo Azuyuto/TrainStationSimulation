@@ -33,13 +33,13 @@ public class ServerInit : MonoBehaviour
         routingManager.AddRoute(new Route(Route.Type.POST, "/color/{objname}", "MaterialInvoke.SetColor"));
         routingManager.AddRoute(new Route(Route.Type.DELETE, "/color/{objname}", "MaterialInvoke.DeleteColor"));
 
-        routingManager.AddRoute(new Route(Route.Type.GET, "/train/{id}", "TrainInvoke.GetTrain"));
-        routingManager.AddRoute(new Route(Route.Type.POST, "/train/{id}", "TrainInvoke.PostTrain"));
-        routingManager.AddRoute(new Route(Route.Type.DELETE, "/train/{id}", "TrainInvoke.DeleteTrain"));
+        routingManager.AddRoute(new Route(Route.Type.GET, "/train/{Id}", "TrainInvoke.GetTrain"));
+        routingManager.AddRoute(new Route(Route.Type.POST, "/train/{Id}", "TrainInvoke.PostTrain"));
+        routingManager.AddRoute(new Route(Route.Type.DELETE, "/train/{Id}", "TrainInvoke.DeleteTrain"));
 
-        routingManager.AddRoute(new Route(Route.Type.GET, "/platform/{id}", "PlatformInvoke.GetPlatform"));
-        routingManager.AddRoute(new Route(Route.Type.POST, "/platform/{id}", "PlatformInvoke.PostPlatform"));
-        routingManager.AddRoute(new Route(Route.Type.DELETE, "/platform/{id}", "PlatformInvoke.DeletePlatform"));
+        routingManager.AddRoute(new Route(Route.Type.GET, "/platform/{Id}", "PlatformInvoke.GetPlatform"));
+        routingManager.AddRoute(new Route(Route.Type.POST, "/platform/{Id}", "PlatformInvoke.PostPlatform"));
+        routingManager.AddRoute(new Route(Route.Type.DELETE, "/platform/{Id}", "PlatformInvoke.DeletePlatform"));
         // Starts the Simple REST Server
         // With or without basic authorisation flag
         if (!username.Equals("") && !password.Equals(""))

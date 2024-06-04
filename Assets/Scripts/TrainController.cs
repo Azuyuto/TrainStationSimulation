@@ -21,7 +21,10 @@ namespace Assets.Scripts
                 var rotation = new Quaternion(-1f, 0f, 0f, 1f);
                 foreach (var item in DataHelper.trains)
                 {
-                    item.Instance = Instantiate(trainPrefab, new Vector3(0, 0, 0), rotation);
+                    GameObject trainInstance = Instantiate(trainPrefab, new Vector3(0, 0, 0), rotation);
+                    trainInstance.name = item.Id; // Assign a unique name based on the train ID
+                    item.Instance = trainInstance; // Save the reference to the instantiated GameObject in the Train instance
+                    
                 }
             }
             else
@@ -40,7 +43,7 @@ namespace Assets.Scripts
                 {
                     item.X = 20;
                 }
-                item.Instance.name = item.Id;
+                
                 item.Instance.transform.position = new Vector3(item.X, item.Y, item.Z);
                 rotation.y = item.RotateY;
                 item.Instance.transform.rotation = rotation;
