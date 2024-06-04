@@ -28,16 +28,16 @@ using RESTfulHTTPServer.src.controller;
 
 namespace RESTfulHTTPServer.src.invoker
 {
-    public class TrainInvoke
+    public class PlatformInvoke
     {
-        private const string TAG = "Train Invoke";
+        private const string TAG = "Platform Invoke";
 
         /// <summary>
         /// Get the color of an object
         /// </summary>
         /// <returns>The color.</returns>
         /// <param name="request">Request.</param>
-        public static Response GetTrain(Request request)
+        public static Response GetPlatform(Request request)
         {
             Response response = new Response();
             string Id = request.GetParameter("Id");
@@ -91,7 +91,7 @@ namespace RESTfulHTTPServer.src.invoker
                 else
                 {
                     // 404 - Not found
-                    responseData = "404 oi blyat";
+                    responseData = "404";
                     response.SetContent(responseData);
                     response.SetHTTPStatusCode((int)HttpStatusCode.NotFound);
                     response.SetMimeType(Response.MIME_CONTENT_TYPE_TEXT);
@@ -114,7 +114,7 @@ namespace RESTfulHTTPServer.src.invoker
         /// </summary>
         /// <returns>The color.</returns>
         /// <param name="request">Request.</param>
-        public static Response DeleteTrain(Request request)
+        public static Response DeletetPlatform(Request request)
         {
             Response response = new Response();
             string responseData = "";
@@ -157,7 +157,7 @@ namespace RESTfulHTTPServer.src.invoker
                 {
 
                     // 404 - Not Found
-                    responseData = "404 cyka";
+                    responseData = "404";
                     response.SetContent(responseData);
                     response.SetHTTPStatusCode((int)HttpStatusCode.NotFound);
                     response.SetMimeType(Response.MIME_CONTENT_TYPE_HTML);
@@ -177,7 +177,7 @@ namespace RESTfulHTTPServer.src.invoker
         /// </summary>
         /// <returns>The color.</returns>
         /// <param name="request">Request.</param>
-        public static Response SetTrain(Request request)
+        public static Response SetPlatform(Request request)
         {
             Response response = new Response();
             string responseData = "";
@@ -236,7 +236,7 @@ namespace RESTfulHTTPServer.src.invoker
                 {
 
                     // 404 - Object not found
-                    responseData = "404 pidar";
+                    responseData = "404";
                     response.SetContent(responseData);
                     response.SetHTTPStatusCode((int)HttpStatusCode.NotFound);
                     response.SetMimeType(Response.MIME_CONTENT_TYPE_HTML);

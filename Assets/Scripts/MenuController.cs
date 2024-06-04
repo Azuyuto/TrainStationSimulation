@@ -19,8 +19,8 @@ public class MenuController : MonoBehaviour
 
         //StaticVariables.ciapagi = inputCiapagi.text;
         //StaticVariables.wagony = inputWagony.text;
-        //StaticVariables.perony = inputPerony.text;
-       // Debug.Log(inputCiapagi.text);
+        //StaticVariables.MAX_NO_PLATFORMS = inputPerony.text;
+        //Debug.Log(inputCiapagi.text);
         SceneManager.LoadScene(index);
     }
 
